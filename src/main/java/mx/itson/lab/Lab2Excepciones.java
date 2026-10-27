@@ -29,6 +29,12 @@ public class Lab2Excepciones {
             Usuario u = repo.findById(id).orElseThrow(NoSuchElementException::new);
             return Map.of("nombre", u.nombre);
         }
+
+        // Endpoint para demostración de error 500 controlado con ID de correlación
+        @GetMapping("/forzar-error")
+        public Map<String, String> forzarError() {
+            throw new IllegalStateException("fallo de prueba");
+        }
     }
 
     @RestControllerAdvice(assignableTypes = SafeCtl.class)
