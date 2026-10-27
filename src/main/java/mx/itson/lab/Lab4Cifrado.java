@@ -73,5 +73,21 @@ public class Lab4Cifrado {
                     (rs, i) -> Map.of("usuario", rs.getString(1),
                                       "contenido", crypto.descifrar(rs.getString(2))));
         }
+
+        // Inspección directa de la base de datos (evidencia)
+        @GetMapping("/db/notas")
+        public Map<String, Object> consultarTablas() {
+            return Map.of(
+                "tabla_plana", jdbc.queryForList("SELECT id, usuario, contenido FROM nota_plana"),
+                "tabla_cifrada", jdbc.queryForList("SELECT id, usuario, contenido FROM nota_cifrada")
+            );
+        }
+
+        // Simulación de ataque / alteración de integridad
+        @PostMapping("/db/alterar")
+        public String alterarNotaCifrada() {
+            jdbc.update("UPDATE nota_cifrada SET contenido = 'A' || SUBSTRING(contenido, 2)");
+            return "Nota cifrada alterada en BD";
+        }
     }
 }
